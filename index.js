@@ -56,7 +56,7 @@ async function enviarParaTodos() {
 }
 
 // Roda todo dia às 6h (horário de Brasília)
-cron.schedule('0 6 * * *', enviarParaTodos, {
+cron.schedule('17 20 * * *', enviarParaTodos, {
   timezone: 'America/Sao_Paulo'
 });
 
