@@ -56,9 +56,9 @@ async function enviarParaTodos() {
 }
 
 // Roda todo dia às 6h (horário de Brasília)
-cron.schedule('17 20 * * *', enviarParaTodos, {
+cron.schedule('17 22 * * *', enviarParaTodos, {
   timezone: 'America/Sao_Paulo'
 });
 
-console.log('Bot ativo — aguardando 6h de Brasília...');
+console.log('Bot ativo — aguardando 17 22h de Brasília...');
 
