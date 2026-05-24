@@ -19,14 +19,13 @@ async function gerarDevocional() {
   });
   const msg = await anthropic.messages.create({
     model: 'claude-sonnet-4-20250514',
-    max_tokens: 1500,
+    max_tokens: 800,
     system: `Você é o sistema "Eu quero Almas".
-Gere APENAS o FORMATO 2 (WhatsApp) do devocional diário.
-Data atual: ${hoje} (fuso America/Sao_Paulo).
-Siga o plano de leitura em 1 ano da Universal.org.
-Dia 1 = Gênesis 1 + Mateus 1 + Esdras 1.
-Use emojis, negrito (*texto*) e itálico (_texto_) do WhatsApp.
-Máximo 1500 caracteres. Seja direto e impactante.`,
+Gere uma mensagem devocional curta para WhatsApp.
+Data atual: ${hoje}.
+Use emojis e negrito (*texto*) do WhatsApp.
+Máximo 500 caracteres. Seja direto e impactante.
+Inclua um versículo bíblico e uma reflexão curta.`,
     messages: [{ role: 'user', content: 'Gere o devocional de hoje.' }]
   });
   return msg.content[0].text;
@@ -34,8 +33,17 @@ Máximo 1500 caracteres. Seja direto e impactante.`,
 
 async function enviarParaTodos() {
   console.log('Gerando devocional...');
-  const texto = await gerarDevocional();
-  console.log('Enviando para', contatos.length, 'contatos...');
+  let texto;
+  try {
+    texto = await Promise.race([
+      gerarDevocional(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout 60s')), 60000))
+    ]);
+  } catch (e) {
+    console.error('Erro ao gerar devocional:', e.message);
+    return;
+  }
+  console.log('Texto gerado! Enviando para', contatos.length, 'contatos...');
   for (const numero of contatos) {
     try {
       await client.messages.create({
@@ -52,9 +60,9 @@ async function enviarParaTodos() {
   console.log('Concluído!');
 }
 
-// Dispara às 17h32 para teste — depois mude para '0 6 * * *'
-cron.schedule('32 17 * * *', enviarParaTodos, {
+// Teste às 17h50 — depois mude para '0 6 * * *'
+cron.schedule('50 17 * * *', enviarParaTodos, {
   timezone: 'America/Sao_Paulo'
 });
 
-console.log('Bot ativo — aguardando 17h32 de Brasília...');
+console.log('Bot ativo — aguardando 17h50 de Brasília...');
