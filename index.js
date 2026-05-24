@@ -17,7 +17,6 @@ async function gerarDevocional() {
     weekday: 'long', day: '2-digit',
     month: 'long', year: 'numeric'
   });
-
   const msg = await anthropic.messages.create({
     model: 'claude-sonnet-4-20250514',
     max_tokens: 1500,
@@ -30,7 +29,6 @@ Use emojis, negrito (*texto*) e itálico (_texto_) do WhatsApp.
 Máximo 1500 caracteres. Seja direto e impactante.`,
     messages: [{ role: 'user', content: 'Gere o devocional de hoje.' }]
   });
-
   return msg.content[0].text;
 }
 
@@ -38,7 +36,6 @@ async function enviarParaTodos() {
   console.log('Gerando devocional...');
   const texto = await gerarDevocional();
   console.log('Enviando para', contatos.length, 'contatos...');
-
   for (const numero of contatos) {
     try {
       await client.messages.create({
@@ -55,10 +52,9 @@ async function enviarParaTodos() {
   console.log('Concluído!');
 }
 
-// Roda todo dia às 6h (horário de Brasília)
-cron.schedule('17 22 * * *', enviarParaTodos, {
+// Dispara às 17h32 para teste — depois mude para '0 6 * * *'
+cron.schedule('32 17 * * *', enviarParaTodos, {
   timezone: 'America/Sao_Paulo'
 });
 
-console.log('Bot ativo — aguardando 17 22h de Brasília...');
-
+console.log('Bot ativo — aguardando 17h32 de Brasília...');
