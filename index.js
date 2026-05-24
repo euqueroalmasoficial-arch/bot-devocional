@@ -61,4 +61,4 @@ cron.schedule('0 6 * * *', enviarParaTodos, {
 });
 
 console.log('Bot ativo — aguardando 6h de Brasília...');
-enviarParaTodos();
+
