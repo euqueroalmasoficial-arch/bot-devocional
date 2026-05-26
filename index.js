@@ -61,8 +61,8 @@ async function enviarParaTodos() {
 }
 
 // Teste às 17h50 — depois mude para '0 6 * * *'
-cron.schedule('50 17 * * *', enviarParaTodos, {
+cron.schedule('30 22 * * *', enviarParaTodos, {
   timezone: 'America/Sao_Paulo'
 });
 
-console.log('Bot ativo — aguardando 17h50 de Brasília...');
+console.log('Bot ativo — aguardando 22h30 de Brasília...');
